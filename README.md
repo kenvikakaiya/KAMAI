@@ -72,6 +72,7 @@ KAMAI/
 ├── templates/
 │
 ├── instance/          # Runtime application data
+│
 ├── app.py
 ├── config.py
 ├── extensions.py
@@ -85,20 +86,20 @@ KAMAI/
 
 ## Installation and Setup
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/kenvikakaiya/KAMAI.git
 cd KAMAI
 ```
 
-### 2. Create a virtual environment
+### 2. Create a Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
-### 3. Activate the virtual environment
+### 3. Activate the Virtual Environment
 
 For Windows PowerShell:
 
@@ -106,13 +107,13 @@ For Windows PowerShell:
 .\venv\Scripts\Activate.ps1
 ```
 
-### 4. Install dependencies
+### 4. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Configure environment variables
+### 5. Configure Environment Variables
 
 Create a `.env` file by copying `.env.example`.
 
@@ -122,16 +123,20 @@ For Windows PowerShell:
 Copy-Item .env.example .env
 ```
 
-Open `.env` and configure your own values:
+Open the `.env` file and configure your environment variables.
+
+Example:
 
 ```env
 SECRET_KEY=your_generated_secret_key
 DATABASE_URL=sqlite:///kamai.db
 ```
 
-Use a secure, randomly generated secret key. Never upload your `.env` file or private credentials to GitHub.
+Generate your own secure secret key and use the database configuration appropriate for your setup.
 
-### 6. Run the application
+**Important:** Never upload your `.env` file, secret keys, passwords, or private credentials to GitHub.
+
+### 6. Run the Application
 
 ```bash
 python app.py
@@ -148,6 +153,7 @@ Open the local address displayed in the terminal in your web browser.
 - Database transactions and rollback handling protect important updates.
 - Task and submission statuses control the earning workflow.
 - Environment variables are used to manage sensitive configuration.
+- Git ignore rules help prevent sensitive environment files from being committed.
 
 ## Project Purpose
 
@@ -159,4 +165,5 @@ This project was developed to practice full-stack web development, database mana
 
 MCA Student | Aspiring Software Developer
 
-GitHub: https://github.com/kenvikakaiya
+- GitHub: [kenvikakaiya](https://github.com/kenvikakaiya)
+- Project Repository: [KAMAI – Micro-Earning Platform](https://github.com/kenvikakaiya/KAMAI)
