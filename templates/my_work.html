@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Work | Kamai</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/my_work.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+    <a class="brand" href="{{ url_for('dashboard') }}">
+        kamai<span>.</span>
+    </a>
+
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('tasks.task_list') }}">Tasks</a>
+        <a class="active" href="{{ url_for('my_work.my_work_page') }}">My Work</a>
+        <a href="{{ url_for('wallet.wallet_page') }}">Wallet</a>
+    </nav>
+
+    <form action="{{ url_for('auth.logout') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="logout-btn" type="submit">Log out</button>
+    </form>
+</header>
+
+<main class="container">
+
+    <section class="page-heading">
+        <p class="eyebrow">YOUR WORKSPACE</p>
+        <h1>My Work</h1>
+        <p>Track your accepted tasks, manage submissions, and keep moving forward.</p>
+    </section>
+
+    <section class="work-summary">
+        <div class="summary-icon" aria-hidden="true">✓</div>
+        <div>
+            <h2>Your tasks, all in one place</h2>
+            <p>Open a task to review its details or submit your completed work when you're ready.</p>
+        </div>
+    </section>
+
+    <section class="work-section">
+
+        {% for assignment in assignments %}
+            <article class="work-card">
+
+                <div class="work-top">
+                    <span class="work-category">
+                        {{ assignment.task.category or 'General Task' }}
+                    </span>
+
+                    <span class="reward">
+                        ₹{{ "%.2f"|format(assignment.task.reward|float) }}
+                    </span>
+                </div>
+
+                <h2>{{ assignment.task.title }}</h2>
+
+                <p class="description">
+                    {{ assignment.task.description or 'No description available for this task.' }}
+                </p>
+
+                <div class="work-info">
+                    <div>
+                        <span class="info-label">Status</span>
+
+                        <span class="status
+                            {% if assignment.status == 'accepted' %}status-accepted
+                            {% elif assignment.status == 'submitted' %}status-submitted
+                            {% elif assignment.status == 'approved' %}status-approved
+                            {% elif assignment.status == 'rejected' %}status-rejected
+                            {% else %}status-default{% endif %}">
+                            {{ assignment.status|capitalize }}
+                        </span>
+                    </div>
+
+                    <div>
+                        <span class="info-label">Accepted</span>
+                        <span class="info-value">
+                            {% if assignment.created_at %}
+                                {{ assignment.created_at.strftime("%d %b %Y") }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="work-actions">
+                    <a class="work-button work-button-secondary"
+                       href="{{ url_for('tasks.task_detail', task_id=assignment.task.id) }}">
+                        Open Task <span aria-hidden="true">↗</span>
+                    </a>
+
+                    {% if assignment.status == "accepted" %}
+                        <a class="work-button"
+                           href="{{ url_for('submissions.submit_work', task_id=assignment.task.id) }}">
+                            Submit Work <span aria-hidden="true">→</span>
+                        </a>
+
+                    {% elif assignment.status == "submitted" %}
+                        <span class="submitted-label">
+                            <span aria-hidden="true">✓</span> Submitted
+                        </span>
+                    {% endif %}
+                </div>
+
+            </article>
+
+        {% else %}
+
+            <div class="empty-state">
+                <div class="empty-icon" aria-hidden="true">✦</div>
+
+                <p class="eyebrow">YOUR NEXT STEP</p>
+                <h2>No work yet</h2>
+
+                <p>
+                    You haven't accepted any tasks yet. Explore available tasks,
+                    choose one that suits you, and get started.
+                </p>
+
+                <a class="browse-button"
+                   href="{{ url_for('tasks.task_list') }}">
+                    Browse Tasks <span aria-hidden="true">→</span>
+                </a>
+            </div>
+
+        {% endfor %}
+
+    </section>
+
+    <p class="page-footer">Keep going, one task at a time.</p>
+</main>
+
+</body>
+</html>

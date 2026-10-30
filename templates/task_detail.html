@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ task.title }} - Kamai</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/tasks.css') }}">
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div class="logo">
+        kamai.
+    </div>
+
+    <nav>
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('tasks.task_list') }}"
+           class="active">
+            Tasks
+        </a>
+
+        <a href="{{ url_for('my_work.my_work_page') }}">
+        My Work
+        </a>
+
+        <a href="{{ url_for('wallet.wallet_page') }}">
+            Wallet
+        </a>
+
+    </nav>
+
+    <a href="{{ url_for('auth.logout') }}"
+       class="logout-btn">
+        Log out
+    </a>
+
+</header>
+
+
+<main class="task-detail-container">
+
+    <a href="{{ url_for('tasks.task_list') }}"
+       class="back-link">
+        ← Back to Tasks
+    </a>
+
+
+    <section class="task-detail-card">
+
+        <div class="task-category">
+            {{ task.category }}
+        </div>
+
+        <h1>
+            {{ task.title }}
+        </h1>
+
+        <p class="task-description">
+            {{ task.description }}
+        </p>
+
+
+        <div class="task-info-grid">
+
+            <div class="task-info">
+
+                <span>
+                    Reward
+                </span>
+
+                <strong>
+                    ₹{{ "%.2f"|format(task.reward|float) }}
+                </strong>
+
+            </div>
+
+
+            <div class="task-info">
+
+                <span>
+                    Deadline
+                </span>
+
+                <strong>
+
+                    {% if task.deadline %}
+                        {{ task.deadline.strftime("%d %b %Y") }}
+                    {% else %}
+                        Flexible
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="task-info">
+
+                <span>
+                    Status
+                </span>
+
+                <strong>
+                    Available
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        {% if already_accepted %}
+
+    <div class="accepted-message">
+        ✓ You have already accepted this task.
+    </div>
+
+    <a href="{{ url_for('submissions.submit_work', task_id=task.id) }}"
+       class="task-button">
+        Submit Work →
+    </a>
+
+{% else %}
+
+    <form method="POST"
+          action="{{ url_for('tasks.accept_task', task_id=task.id) }}">
+
+        <input type="hidden"
+               name="csrf_token"
+               value="{{ csrf_token() }}">
+
+        <button type="submit" class="accept-task-btn">Accept Task</button>
+    </form>
+
+{% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

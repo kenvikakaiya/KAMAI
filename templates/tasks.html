@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>KAMAI | Explore Tasks</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/user_pages.css') }}">
+
+    <style>
+        .back-link {
+            display: inline-block;
+            margin-bottom: 22px;
+            color: #5738d0;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .task-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-card h2 {
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .task-card .task-description {
+            flex-grow: 1;
+        }
+
+        .task-card .reward {
+            margin: 0 0 8px;
+        }
+
+        .task-card .primary-button,
+        .task-card .secondary-button {
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .task-card form {
+            margin: 0;
+        }
+
+        .task-card form button {
+            width: 100%;
+        }
+
+        .task-search {
+            max-width: 360px;
+        }
+
+        .task-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 560px) {
+            .task-toolbar {
+                align-items: stretch;
+            }
+
+            .task-search {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<main class="user-page">
+
+    <header class="page-heading">
+        <p>KAMAI WORKSPACE</p>
+        <h1>Explore Tasks</h1>
+        <p>
+            Find available work, open task details, and earn rewards.
+        </p>
+    </header>
+
+    <a class="back-link" href="{{ url_for('dashboard') }}">
+        &larr; Back to Dashboard
+    </a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash-message {{ category }}" role="status">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="panel">
+
+        <div class="task-toolbar">
+            <div>
+                <h2>Available Opportunities</h2>
+                <p>Select a task to view its complete details.</p>
+            </div>
+
+            <input
+                type="search"
+                id="taskSearch"
+                class="task-search"
+                placeholder="Search tasks..."
+                aria-label="Search tasks"
+            >
+        </div>
+
+        <div class="card-grid" id="taskGrid">
+
+            {% for task in tasks %}
+                <article class="item-card task-card">
+
+                    <span class="status">
+                        {% if task.id in accepted_task_ids %}
+                            Accepted
+                        {% else %}
+                            Available
+                        {% endif %}
+                    </span>
+
+                    <h2 class="task-title">
+                        {{ task.title }}
+                    </h2>
+
+                    <p class="task-description">
+                        {{ task.description }}
+                    </p>
+
+                    <div>
+                        <p>Reward</p>
+                        <p class="reward">
+                            ₹{{ "%.2f"|format(task.reward|float) }}
+                        </p>
+                    </div>
+
+                    <a
+                        class="primary-button"
+                        href="{{ url_for('tasks.task_detail', task_id=task.id) }}"
+                    >
+                        View Task Details
+                    </a>
+
+                </article>
+
+            {% else %}
+                <div class="empty-state">
+                    <h2>No tasks available</h2>
+                    <p>Please check again later for new tasks.</p>
+                </div>
+            {% endfor %}
+
+        </div>
+    </section>
+
+    <footer style="margin-top: 30px; color: #85849a; text-align: center;">
+        KAMAI &copy; 2026 — Your work, your earnings.
+    </footer>
+
+</main>
+
+<script>
+    const searchInput = document.getElementById("taskSearch");
+    const taskCards = document.querySelectorAll(".task-card");
+
+    searchInput.addEventListener("input", function () {
+        const query = this.value.trim().toLowerCase();
+
+        taskCards.forEach(function (card) {
+            const title =
+                card.querySelector(".task-title").textContent.toLowerCase();
+
+            const description =
+                card.querySelector(".task-description").textContent.toLowerCase();
+
+            card.style.display =
+                title.includes(query) || description.includes(query)
+                    ? ""
+                    : "none";
+        });
+    });
+</script>
+
+</body>
+</html>

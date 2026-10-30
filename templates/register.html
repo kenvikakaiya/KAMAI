@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | Kamai</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+
+    <div class="auth-container">
+
+        <section class="auth-brand">
+            <a href="{{ url_for('home') }}" class="logo">✦ Kamai</a>
+
+            <div class="brand-content">
+                <span class="tag">YOUR SKILLS. YOUR EARNINGS.</span>
+                <h1>Every small step can lead to something big.</h1>
+                <p>Join Kamai and discover opportunities to earn through simple tasks and your skills.</p>
+            </div>
+
+            <p class="brand-footer">Made with care for a world of opportunities.</p>
+        </section>
+
+        <section class="auth-form-section">
+            <div class="auth-form">
+
+                <a href="{{ url_for('home') }}" class="mobile-logo">✦ Kamai</a>
+
+                <span class="tag">GET STARTED</span>
+                <h2>Create your account</h2>
+                <p class="subtitle">Start your earning journey with Kamai.</p>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <label for="full_name">Full Name</label>
+                    <input
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required
+                    >
+
+                    <label for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Choose a username"
+                        autocomplete="username"
+                        required
+                    >
+
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="example@email.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Minimum 8 characters"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <label for="confirm_password">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        placeholder="Enter password again"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button type="submit" class="submit-btn">
+                        Create Account →
+                    </button>
+                </form>
+
+                <p class="auth-switch">
+                    Already have an account?
+                    <a href="{{ url_for('auth.login') }}">Login</a>
+                </p>
+
+                <p class="terms">
+                    By creating an account, you agree to use Kamai responsibly.
+                </p>
+
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

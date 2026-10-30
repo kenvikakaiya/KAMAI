@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Review | Kamai</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/admin.css') }}">
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div class="logo">
+        kamai.
+    </div>
+
+    <nav>
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('tasks.task_list') }}">
+            Tasks
+        </a>
+
+        <a href="{{ url_for('my_work.my_work_page') }}">
+            My Work
+        </a>
+
+        <a href="{{ url_for('wallet.wallet_page') }}">
+            Wallet
+        </a>
+
+    </nav>
+
+    <form action="{{ url_for('auth.logout') }}"
+          method="POST">
+
+        <input type="hidden"
+               name="csrf_token"
+               value="{{ csrf_token() }}">
+
+        <button type="submit"
+                class="logout-btn">
+            Log out
+        </button>
+
+    </form>
+
+</header>
+
+
+<main class="admin-container">
+
+    <section class="page-heading">
+
+        <p class="eyebrow">
+            ADMIN PANEL
+        </p>
+
+        <h1>
+            Review submissions
+        </h1>
+
+        <p>
+            Review completed work before releasing the reward.
+        </p>
+
+    </section>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="message {{ category }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <section class="submission-list">
+
+        {% for submission in submissions %}
+
+            <article class="submission-card">
+
+                <div class="submission-header">
+
+                    <div>
+
+                        <span class="category">
+                            {{ submission.task.category }}
+                        </span>
+
+                        <h2>
+                            {{ submission.task.title }}
+                        </h2>
+
+                    </div>
+
+                    <div class="reward">
+                        ₹{{ "%.2f"|format(submission.task.reward|float) }}
+                    </div>
+
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        Submitted by:
+                    </strong>
+
+                    {{ submission.user.username }}
+
+                </div>
+
+
+                <div class="submission-content">
+
+                    <h3>
+                        Submitted Work
+                    </h3>
+
+                    <p>
+                        {{ submission.content }}
+                    </p>
+
+                </div>
+
+
+                <div class="submission-date">
+
+                    Submitted:
+                    {{ submission.created_at.strftime("%d %b %Y, %I:%M %p") }}
+
+                </div>
+
+
+                <div class="admin-actions">
+
+                    <form method="POST"
+                          action="{{ url_for('admin.approve_submission', submission_id=submission.id) }}">
+
+                        <input type="hidden"
+                               name="csrf_token"
+                               value="{{ csrf_token() }}">
+
+                        <button type="submit"
+                                class="approve-btn">
+
+                            ✓ Approve & Pay
+
+                        </button>
+
+                    </form>
+
+
+                    <form method="POST"
+                          action="{{ url_for('admin.reject_submission', submission_id=submission.id) }}">
+
+                        <input type="hidden"
+                               name="csrf_token"
+                               value="{{ csrf_token() }}">
+
+                        <button type="submit"
+                                class="reject-btn">
+
+                            Reject
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </article>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    ✓
+                </div>
+
+                <h2>
+                    No pending submissions
+                </h2>
+
+                <p>
+                    All submitted work has been reviewed.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

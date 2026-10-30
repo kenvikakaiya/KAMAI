@@ -1,0 +1,208 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fffaf7;
+    color: #171717;
+}
+
+.topbar {
+    height: 86px;
+    background: white;
+    border-bottom: 1px solid #eee2dc;
+    display: flex;
+    align-items: center;
+    padding: 0 6%;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    color: #ef5b3c;
+}
+
+.topbar nav {
+    margin-left: auto;
+    display: flex;
+    gap: 34px;
+}
+
+.topbar nav a {
+    text-decoration: none;
+    color: #777;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.topbar nav a:hover,
+.topbar nav a.active {
+    color: #ef5b3c;
+}
+
+.logout-btn {
+    margin-left: 45px;
+    text-decoration: none;
+    color: #ef5b3c;
+    border: 1px solid #f0d9d0;
+    padding: 11px 23px;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+.wallet-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 65px 25px;
+}
+
+.wallet-intro {
+    background: linear-gradient(135deg, #fff0e8, #ffe1d2);
+    border-radius: 25px;
+    padding: 42px;
+    margin-bottom: 30px;
+}
+
+.wallet-label {
+    color: #ef5b3c;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.wallet-intro h1 {
+    margin: 0 0 12px;
+    font-size: 42px;
+}
+
+.wallet-intro p {
+    margin: 0;
+    color: #777;
+    font-size: 17px;
+}
+
+.balance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 35px;
+}
+
+.balance-card {
+    background: white;
+    border: 1px solid #eee1da;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(80, 40, 20, 0.04);
+}
+
+.balance-card .card-label {
+    color: #777;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+
+.balance-card h2 {
+    margin: 0;
+    font-size: 34px;
+    color: #ef5b3c;
+}
+
+.wallet-section {
+    background: white;
+    border: 1px solid #eee1da;
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.wallet-section h2 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.empty-wallet {
+    text-align: center;
+    padding: 50px 20px;
+    color: #777;
+}
+
+.empty-wallet-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: #fff0e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ef5b3c;
+    font-size: 25px;
+}
+
+.empty-wallet h3 {
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.empty-wallet p {
+    margin: 0;
+}
+
+.transaction {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding: 18px 0;
+}
+
+.transaction-info strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.transaction-info p {
+    margin: 0;
+    color: #888;
+    font-size: 14px;
+}
+
+.transaction-amount {
+    color: #ef5b3c;
+    font-weight: 700;
+}
+
+@media (max-width: 700px) {
+    .topbar {
+        padding: 0 20px;
+    }
+
+    .topbar nav {
+        gap: 15px;
+    }
+
+    .logout-btn {
+        margin-left: 15px;
+        padding: 8px 14px;
+    }
+
+    .wallet-container {
+        padding: 35px 18px;
+    }
+
+    .wallet-intro {
+        padding: 28px;
+    }
+
+    .wallet-intro h1 {
+        font-size: 32px;
+    }
+
+    .balance-grid {
+        grid-template-columns: 1fr;
+    }
+}

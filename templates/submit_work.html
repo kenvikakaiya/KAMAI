@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Submit Work | Kamai</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/submission.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+    <a class="brand" href="{{ url_for('dashboard') }}">
+        kamai<span>.</span>
+    </a>
+
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('tasks.task_list') }}">Tasks</a>
+        <a href="{{ url_for('my_work.my_work_page') }}" class="active">My Work</a>
+        <a href="{{ url_for('wallet.wallet_page') }}">Wallet</a>
+    </nav>
+
+    <form action="{{ url_for('auth.logout') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="logout-btn" type="submit">Log out</button>
+    </form>
+</header>
+
+<main class="container">
+
+    <div class="back-link">
+        <a href="{{ url_for('my_work.my_work_page') }}">
+            <span aria-hidden="true">←</span> Back to My Work
+        </a>
+    </div>
+
+    <section class="submit-card">
+
+        <div class="task-header">
+            <span class="category">
+                {{ task.category or 'General Task' }}
+            </span>
+
+            <span class="reward">
+                ₹{{ "%.2f"|format(task.reward|float) }}
+            </span>
+        </div>
+
+        <p class="eyebrow">TASK SUBMISSION</p>
+
+        <h1>Submit Your Work</h1>
+
+        <h2>{{ task.title }}</h2>
+
+        <p class="task-description">
+            {{ task.description or 'No description available for this task.' }}
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" aria-live="polite">
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if submission and submission.status == "pending" %}
+
+            <div class="already-submitted">
+                <div class="status-icon" aria-hidden="true">✓</div>
+
+                <p class="eyebrow">SUBMISSION RECEIVED</p>
+
+                <h3>Work Already Submitted</h3>
+
+                <p>
+                    Your submission is currently under review.
+                    You can check its current status below.
+                </p>
+
+                <a href="{{ url_for(
+                        'submissions.submission_status',
+                        submission_id=submission.id
+                    ) }}"
+                   class="primary-button">
+                    View Submission <span aria-hidden="true">→</span>
+                </a>
+            </div>
+
+        {% else %}
+
+            <form method="POST" class="submission-form">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+                <label for="content">Your Completed Work</label>
+
+                <p class="field-description">
+                    Write or paste your completed task below.
+                </p>
+
+                <textarea
+                    id="content"
+                    name="content"
+                    rows="10"
+                    placeholder="Write or paste your completed work here..."
+                    required
+                >{% if submission %}{{ submission.content }}{% endif %}</textarea>
+
+                <p class="helper-text">
+                    Before submitting, make sure your work is complete
+                    and follows the task requirements.
+                </p>
+
+                <button type="submit" class="primary-button">
+                    Submit Work <span aria-hidden="true">→</span>
+                </button>
+
+            </form>
+
+        {% endif %}
+
+    </section>
+
+    <p class="page-footer">
+        Review your work before submitting it to KAMAI.
+    </p>
+
+</main>
+
+</body>
+</html>

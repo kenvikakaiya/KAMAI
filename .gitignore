@@ -1,0 +1,26 @@
+
+# Python virtual environments
+venv/
+.venv/
+.venv-1/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Database files
+instance/*.db
+instance/*.sqlite
+*.db
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+
+# System files
+.DS_Store

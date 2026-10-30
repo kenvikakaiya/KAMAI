@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>KAMAI | My Wallet</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/user_pages.css') }}">
+
+    <style>
+        .wallet-back {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #5738d0;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .wallet-summary {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .wallet-stat {
+            padding: 25px;
+            border: 1px solid #ececf4;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 6px 24px rgba(36, 35, 58, 0.04);
+        }
+
+        .wallet-stat p {
+            margin: 0 0 12px;
+            color: #85849a;
+        }
+
+        .wallet-stat h2 {
+            margin: 0;
+            font-size: clamp(25px, 4vw, 36px);
+            overflow-wrap: anywhere;
+        }
+
+        .wallet-stat.available h2 {
+            color: #16845b;
+        }
+
+        .wallet-stat.pending h2 {
+            color: #8a5b12;
+        }
+
+        .wallet-back:hover {
+            text-decoration: underline;
+        }
+
+        .transaction-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .transaction-search {
+            max-width: 300px;
+        }
+
+        .transaction-amount {
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .transaction-table th,
+        .transaction-table td {
+            padding: 16px;
+        }
+
+        .transaction-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .wallet-footer {
+            margin-top: 30px;
+            color: #85849a;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .wallet-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .transaction-search {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<main class="user-page">
+
+    <header class="page-heading">
+        <p>KAMAI WORKSPACE</p>
+        <h1>My Wallet</h1>
+        <p>
+            Manage your earnings and keep track of your completed work.
+        </p>
+    </header>
+
+    <a class="wallet-back" href="{{ url_for('dashboard') }}">
+        &larr; Back to Dashboard
+    </a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash-message {{ category }}" role="status">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- Wallet balance cards -->
+    <section class="wallet-summary">
+
+        <article class="wallet-stat available">
+            <p>Available Balance</p>
+            <h2>
+                ₹{{ "%.2f"|format(balance|default(0, true)|float) }}
+            </h2>
+            <p style="margin-top: 12px;">
+                Funds currently available in your wallet.
+            </p>
+        </article>
+
+        <article class="wallet-stat pending">
+            <p>Pending Balance</p>
+            <h2>
+                ₹{{ "%.2f"|format(pending|default(0, true)|float) }}
+            </h2>
+            <p style="margin-top: 12px;">
+                Earnings awaiting confirmation.
+            </p>
+        </article>
+
+    </section>
+
+    <!-- Wallet highlight -->
+    <section class="balance-panel">
+        <p class="balance-label">Your KAMAI Wallet</p>
+
+        <h2 class="balance-amount">
+            ₹{{ "%.2f"|format(balance|default(0, true)|float) }}
+        </h2>
+
+        <p class="balance-label">
+            Keep completing tasks to grow your earnings.
+        </p>
+    </section>
+
+    <!-- Transaction history -->
+    <section class="panel" style="margin-top: 24px;">
+
+        <div class="transaction-toolbar">
+            <div>
+                <h2>Transaction History</h2>
+                <p>Review your wallet activity below.</p>
+            </div>
+
+            <input
+                type="search"
+                id="transactionSearch"
+                class="transaction-search"
+                placeholder="Search transactions..."
+                aria-label="Search transactions"
+            >
+        </div>
+
+        <div class="table-wrapper">
+            <table class="transaction-table" id="transactionTable">
+
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for transaction in transactions %}
+                        <tr>
+                            <td>
+                                {{ transaction.description
+                                   |default('Wallet transaction', true) }}
+                            </td>
+
+                            <td>
+                                {{ transaction.transaction_type
+                                   |default('Transaction', true)
+                                   |replace('_', ' ')
+                                   |title }}
+                            </td>
+
+                            <td class="transaction-amount">
+                                ₹{{ "%.2f"|format(
+                                    transaction.amount|default(0, true)|float
+                                ) }}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="empty-state">
+                                <strong>No transactions yet</strong>
+                                <p>
+                                    Your wallet transactions will appear here
+                                    when they are recorded.
+                                </p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </section>
+
+    <footer class="wallet-footer">
+        KAMAI &copy; 2026 — Your work, your earnings.
+    </footer>
+
+</main>
+
+<script>
+    const transactionSearch =
+        document.getElementById("transactionSearch");
+
+    const transactionRows =
+        document.querySelectorAll("#transactionTable tbody tr");
+
+    transactionSearch.addEventListener("input", function () {
+        const query = this.value.trim().toLowerCase();
+
+        transactionRows.forEach(function (row) {
+            const rowText = row.textContent.toLowerCase();
+
+            row.style.display =
+                rowText.includes(query) ? "" : "none";
+        });
+    });
+</script>
+
+</body>
+</html>
