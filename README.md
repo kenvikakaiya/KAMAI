@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-KAMAI is a web-based micro-earning platform that allows users to discover available tasks, accept work, submit completed tasks, and earn rewards. It also provides an admin panel to review submissions, approve or reject work, and manage reward payments.
+KAMAI is a web-based micro-earning platform that allows users to discover available tasks, accept work, submit completed tasks, and earn rewards.
+
+It also provides an admin panel to review submissions, approve or reject work, and manage reward payments.
 
 The platform is designed to provide a simple and organized task-based earning workflow.
 
@@ -69,7 +71,7 @@ KAMAI/
 │
 ├── templates/
 │
-├── instance/
+├── instance/          # Runtime application data
 ├── app.py
 ├── config.py
 ├── extensions.py
@@ -86,7 +88,7 @@ KAMAI/
 ### 1. Clone the repository
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/kenvikakaiya/KAMAI.git
 cd KAMAI
 ```
 
@@ -112,16 +114,22 @@ pip install -r requirements.txt
 
 ### 5. Configure environment variables
 
-Create a `.env` file in the project root using `.env.example` as a reference.
+Create a `.env` file by copying `.env.example`.
 
-Configure:
+For Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Open `.env` and configure your own values:
 
 ```env
 SECRET_KEY=your_generated_secret_key
 DATABASE_URL=sqlite:///kamai.db
 ```
 
-Use your own secure secret key. Never upload the `.env` file to GitHub.
+Use a secure, randomly generated secret key. Never upload your `.env` file or private credentials to GitHub.
 
 ### 6. Run the application
 
@@ -129,7 +137,7 @@ Use your own secure secret key. Never upload the `.env` file to GitHub.
 python app.py
 ```
 
-Open the local address displayed by Flask in your browser.
+Open the local address displayed in the terminal in your web browser.
 
 ## Security Measures
 
@@ -139,6 +147,7 @@ Open the local address displayed by Flask in your browser.
 - CSRF protection is enabled for form submissions.
 - Database transactions and rollback handling protect important updates.
 - Task and submission statuses control the earning workflow.
+- Environment variables are used to manage sensitive configuration.
 
 ## Project Purpose
 
@@ -150,3 +159,4 @@ This project was developed to practice full-stack web development, database mana
 
 MCA Student | Aspiring Software Developer
 
+GitHub: https://github.com/kenvikakaiya
